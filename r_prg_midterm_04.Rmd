@@ -1,0 +1,97 @@
+---
+title: "r_programming_midterm_04"
+author: "陳韋哲"
+date: "2017/2/9"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#**第一部分：修改自訂排序函數，加入參數decreasing**
+```{r}
+#1 Generate function my.sort() with parameter decreasing= FALSE as default
+
+my.sort <- function(input_vec, decreasing = FALSE){
+  vec_length<- length(input_vec)
+  if(decreasing == FALSE){
+  for( i in 1:(vec_length - 1)){
+    for (j in (i + 1):vec_length){
+        if (input_vec[i] > input_vec[j]){
+        temp <- input_vec[i]
+        input_vec[i] <- input_vec[j]
+        input_vec[j] <- temp
+     }
+    }
+   }
+  } else{ for( i in 1:(vec_length - 1)){
+    for (j in (i + 1):vec_length){
+      if (input_vec[i] < input_vec[j]){
+        temp <- input_vec[i]
+        input_vec[i] <- input_vec[j]
+        input_vec[j] <- temp
+      }
+    }
+  }
+    
+ }
+  
+  return(input_vec)
+}
+
+#2 Geneate an input vector
+my_vec <- round(runif(10) * 100)
+
+#3 Call function
+ #3.1 Sort the input vector in a descending order by entering decreasing = TRUE
+my.sort(my_vec, decreasing = TRUE)
+ #3.2 Sort the input vector in an ascending order by using default decreasing = FALSE
+my.sort(my_vec)
+```
+---
+
+#**第二部分：自訂計算樣本標準差的函數**
+```{r}
+#1 Generate function my.sample.sd to calcualte the sample standard deviation of a vector
+
+my.sample.sd <- function(input_vec){
+  result <- sqrt(sum((input_vec - mean(input_vec))^2)/(length(input_vec) - 1))
+  return(result)
+}
+
+#2 Generate an input vector
+my_vec <- runif(100)*100
+
+#3 Function Call and comparison with bult-in function sd()
+
+my.sample.sd(my_vec)
+
+sd(my_vec)
+```
+---
+
+#**第三部分：自訂計算BMI的函數並且使用 mapply 函數**
+```{r}
+heights <- c(173, 168, 171, 189, 179)
+weights <- c(65.4, 59.2, 63.6, 88.4, 68.7)
+heights_and_weights <- data.frame(heights, weights)
+
+# Create function bmi_cal()
+bmi_cal <- function(height, weight){
+  bmi <-  weight/(height/100)^2
+  return(bmi)
+}
+
+# Create inputs
+my_weight <- 85
+my_height <- 170.2
+
+# Function call
+my_bmi <-  bmi_cal(height = my_height, weight = my_weight)
+my_bmi
+
+# Using the data.frame
+calculated_bmi <- mapply(bmi_cal,height = heights_and_weights$heights, weight = heights_and_weights$weights)
+heights_and_weights <- cbind(heights_and_weights, bmi = calculated_bmi )
+heights_and_weights
+```
